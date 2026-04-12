@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<meta charset="UTF-8">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-X1NMBB6948"></script>
 <script>
@@ -17,7 +18,6 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "waj1iaac0q");
 </script>
-<meta charset="UTF-8">
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>鉱石のすみか｜富士宮市のパワーストーン・鉱石専門店</title>
@@ -27,16 +27,16 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="鉱石のすみか｜富士宮市のパワーストーン・鉱石専門店">
 <meta property="og:description" content="富士宮市のパワーストーン・鉱石専門店。ブレスレット・原石・アクセサリーを取り揃え、あなたにぴったりの石をご提案します。KSKスクエアビル1F、営業10:00〜18:00、木曜定休。">
-<meta property="og:image" content="https://kousekino-sumika.pages.dev/img/logo_square.jpg">
+<meta property="og:image" content="https://kousekino-sumika.pages.dev/img/ogp_image.jpg">
 <meta property="og:url" content="https://kousekino-sumika.pages.dev">
 <meta property="og:site_name" content="鉱石のすみか">
 <meta property="og:locale" content="ja_JP">
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="鉱石のすみか｜富士宮市のパワーストーン・鉱石専門店">
 <meta name="twitter:description" content="富士宮市のパワーストーン・鉱石専門店。ブレスレット・原石・アクセサリーを取り揃え、あなたにぴったりの石をご提案します。KSKスクエアビル1F、営業10:00〜18:00、木曜定休。">
-<meta name="twitter:image" content="https://kousekino-sumika.pages.dev/img/logo_square.jpg">
+<meta name="twitter:image" content="https://kousekino-sumika.pages.dev/img/ogp_image.jpg">
 <link rel="icon" href="img/logo_square.jpg" type="image/jpeg">
 
 <!-- 構造化データ（JSON-LD） -->
@@ -80,7 +80,7 @@
     "https://www.instagram.com/tfg_kousekino_sumika/",
     "https://ameblo.jp/tfg1029/"
   ],
-  "image": "img/logo_square.jpg",
+  "image": "https://kousekino-sumika.pages.dev/img/logo_square.jpg",
   "priceRange": "¥¥",
   "currenciesAccepted": "JPY",
   "paymentAccepted": "Cash, Credit Card"
@@ -1102,12 +1102,15 @@ async function fetchNewsFromSheet() {
     isLoading = false;
     if (Array.isArray(data) && data.length > 0) {
       // badge が空（nonだった行）はお知らせ一覧に表示しない
-      newsList = data.filter(item => item.badge !== "");
+      const filtered = data.filter(item => item.badge !== "");
+      // フィルタ後も0件の場合はデフォルトにフォールバック
+      newsList = filtered.length > 0 ? filtered : DEFAULT_NEWS;
       // ★バナー表示 が選択された全件をバナーに使う
       const bannerItems = data.filter(item => item.banner !== "");
       renderNewsList();
       renderHeroBanner(bannerItems.length > 0 ? bannerItems : null);
     } else {
+      // GASが空配列を返した場合もデフォルト表示
       newsList = DEFAULT_NEWS;
       renderNewsList();
       renderHeroBanner(null);
