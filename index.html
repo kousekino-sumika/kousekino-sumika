@@ -389,11 +389,13 @@ body { background:var(--bg2); color:var(--text); font-family:'Noto Serif JP',ser
 .hero-news-inner .hero-news-text{flex:1;min-width:0;}
 .hero-news-text{font-size:12px;font-weight:300;color:var(--text);white-space:normal;overflow:visible;text-overflow:unset;flex:1;min-width:0;line-height:1.7;}
 @media(max-width:600px){
-  .hero-news-bar{padding:8px 16px;gap:4px 8px;align-items:flex-start;}
-  .hero-news-bar-meta{display:flex;align-items:center;gap:8px;width:100%;flex-shrink:0;}
+  .hero-news-bar{padding:8px 16px;gap:4px 8px;align-items:flex-start;flex-direction:column;}
+  .hero-news-inner{flex-direction:column;gap:4px;width:100%;}
+  .hero-news-meta{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;}
   .hero-news-badge{flex-shrink:0;}
   .hero-news-date-mobile{font-size:10px;color:var(--muted);white-space:nowrap;font-family:'Noto Serif JP',serif;font-weight:300;}
   .hero-news-text{white-space:normal;text-overflow:unset;overflow:visible;font-size:11px;text-align:left;width:100%;padding-left:2px;line-height:1.7;}
+  .banner-dots{margin-left:auto;}
 }
 
 
@@ -707,7 +709,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:24
     <span class="hero-news-badge badge-info" id="heroNewsBadge"></span>
     <span class="hero-news-text" id="heroNewsText"></span>
   </div>
-  <span class="banner-dots" id="bannerDots" style="display:none;margin-left:auto;flex-shrink:0;display:flex;gap:5px;align-items:center;"></span>
+  <span class="banner-dots" id="bannerDots" style="display:none;"></span>
 </div>
 
 <!-- HERO -->
@@ -1004,7 +1006,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:24
 <!-- ACCESS -->
 <section class="access-section reveal" id="access-section" data-scroll-section>
   <div class="access-map">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3243.5!2d138.6178339!3d35.2391776!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601bd115eab8e0a9%3A0x38fa004e857a833d!2z6Y6u55Sj44Gu44GZ44G_44GL!5e0!3m2!1sja!2sjp!4v1700000000003"
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3243.5!2d138.6178339!3d35.2391776!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601bd115eab8e0a9%3A0x38fa004e857a833d!2z6Y6u55Sj44Gu44GZ44G_44GL!5e0!3m2!1sja!2sjp!4v1700000000003&output=embed"
       allowfullscreen="" loading="lazy" title="鉱石のすみか 地図" referrerpolicy="no-referrer-when-downgrade">
     </iframe>
   </div>
@@ -1052,7 +1054,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:24
       Facebook
     </a>
   </div>
-  <span class="footer-copy">© TfG 鉱石のすみか . All Rights Reserved.</span>
+  <span class="footer-copy">© 2026 鉱石のすみか</span>
 </footer>
 
 <!-- トップへ戻るボタン -->
@@ -1077,6 +1079,8 @@ function esc(s) {
     .replace(/&/g,"&amp;").replace(/</g,"&lt;")
     .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
+
+let isLoading = true;
 
 const GAS_URL = "https://script.google.com/macros/s/AKfycbziitAbrKunsAbSAjDmxc0m42P2hncwTAvlfG0i0NJY8dLh2oj3qo6wLYs60HnAECro/exec";
 
@@ -1132,8 +1136,6 @@ function formatDate(dateStr) {
 }
 
 /* ---------- ページ描画 ---------- */
-let isLoading = true;
-
 const INITIAL_COUNT = 3;
 
 function renderNewsList() {
@@ -1297,6 +1299,7 @@ function _showBannerItem(idx) {
   banner.style.transition = "opacity 0.4s ease";
 
   setTimeout(() => {
+    const isMobile = window.innerWidth <= 600;
     if (item.badge && item.badge !== "") {
       badge.textContent   = BADGE_LABELS_BANNER[item.badge] || "";
       badge.className     = "hero-news-badge " + item.badge;
@@ -1305,7 +1308,20 @@ function _showBannerItem(idx) {
       badge.style.display = "none";
     }
     banner.classList.toggle("banner-closed", item.badge === "badge-closed");
-    text.textContent = (item.date ? item.date + "　" : "") + item.text;
+
+    if (isMobile) {
+      const dateStr = item.date ? item.date : "";
+      const inner = banner.querySelector(".hero-news-inner");
+      inner.innerHTML = `
+        <div class="hero-news-meta">
+          <span class="hero-news-badge ${item.badge || ""}" style="${(!item.badge || item.badge==='') ? 'display:none;' : ''}">${BADGE_LABELS_BANNER[item.badge] || ""}</span>
+          ${dateStr ? `<span style="font-size:10px;color:var(--muted);white-space:nowrap;font-family:'Noto Serif JP',serif;font-weight:300;">${dateStr}</span>` : ""}
+        </div>
+        <span class="hero-news-text">${item.title ? esc(item.title) : esc(item.text || "")}</span>
+      `;
+    } else {
+      text.textContent = (item.date ? item.date + "　" : "") + (item.title || item.text || "");
+    }
 
     // ドットのactive更新
     if (dotsWrap) {
@@ -1425,8 +1441,8 @@ window.addEventListener("scroll", () => { closeMobileMenu(); }, { passive:true, 
   const slideshow = document.getElementById('heroSlideshow');
   if(!canvas || !slideshow) return;
 
-  /* モバイルではパーティクル無効 */
-  if(window.innerWidth < 768) { canvas.style.display='none'; return; }
+  /* モバイルではパーティクル粒子数を削減 */
+  const PARTICLE_COUNT = window.innerWidth < 768 ? 20 : 48;
 
   function resize() {
     canvas.width  = slideshow.offsetWidth;
@@ -1500,7 +1516,7 @@ window.addEventListener("scroll", () => { closeMobileMenu(); }, { passive:true, 
     };
   }
 
-  const particles = Array.from({length:48}, () => new Particle());
+  const particles = Array.from({length: PARTICLE_COUNT}, () => new Particle());
 
   function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1548,9 +1564,14 @@ const snapObserver = new IntersectionObserver(entries => {
 }, { rootMargin: "200px" });
 document.querySelectorAll(".snapwidget-lazy").forEach(el => snapObserver.observe(el));
 
-/* モバイルでアニメーション軽量化 */
+/* モバイルでAuroraを軽量化（blob2個・低速化・blur40px） */
 if(window.innerWidth < 768) {
-  document.querySelectorAll(".aurora-blob").forEach(el => el.style.display = "none");
+  document.querySelectorAll(".aurora-blob").forEach((el, i) => {
+    if(i >= 2) { el.style.display = "none"; return; }
+    el.style.filter = "blur(40px)";
+    const dur = parseFloat(el.style.getPropertyValue("--dur") || "14");
+    el.style.setProperty("--dur", (dur * 2) + "s");
+  });
 }
 </script>
 </body>
