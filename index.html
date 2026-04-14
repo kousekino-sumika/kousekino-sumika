@@ -689,7 +689,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:24
   </a>
   <ul class="nav-links">
     <li><a href="#news-section">お知らせ</a></li>
-    <li><a href="#item-section">アイテム</a></li>
+    <li><a href="#item-section">商品一例</a></li>
     <li><a href="#ig-section">Instagramギャラリー</a></li>
     <li><a href="#qna-section">Q&amp;A</a></li>
     <li><a href="#access-section">アクセス</a></li>
@@ -698,7 +698,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:24
 </nav>
 <nav class="mobile-menu" id="mobile-menu">
   <a href="#news-section"  onclick="closeMobileMenu()">📢 お知らせ</a>
-  <a href="#item-section"   onclick="closeMobileMenu()">💎 アイテム</a>
+  <a href="#item-section"   onclick="closeMobileMenu()">💎 商品一例</a>
   <a href="#ig-section"     onclick="closeMobileMenu()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:2px;flex-shrink:0;"><defs><linearGradient id="ig-mob" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="url(#ig-mob)" stroke-width="2.2"/><circle cx="12" cy="12" r="4" stroke="url(#ig-mob)" stroke-width="2.2"/><circle cx="17.5" cy="6.5" r="1.2" fill="#cc2366"/></svg> Instagramギャラリー</a>
   <a href="#qna-section"    onclick="closeMobileMenu()">💬 Q&amp;A</a>
   <a href="#access-section" onclick="closeMobileMenu()">📍 アクセス</a>
@@ -1219,7 +1219,7 @@ function newsItemHTML(item) {
         ${item.badge && item.badge !== "non"
           ? `<span class="news-badge ${item.badge}">${BADGE_LABELS[item.badge] || ""}</span>`
           : `<span class="news-badge" style="visibility:hidden;"></span>`}
-        <span class="news-date">${esc(formatDate(item.date))}</span>
+        
         <div class="news-body"><div class="news-body-inner">${bodyInHeader}${chevron}</div></div>
       </div>
       ${detailHTML}
@@ -1343,7 +1343,7 @@ function _showBannerItem(idx) {
       inner.innerHTML = `
         <div class="hero-news-meta">
           <span class="hero-news-badge ${item.badge || ""}" style="${(!item.badge || item.badge === '') ? 'display:none;' : ''}">${BADGE_LABELS_BANNER[item.badge] || ""}</span>
-          ${item.date ? `<span style="font-size:10px;color:var(--muted);white-space:nowrap;font-family:'Noto Serif JP',serif;font-weight:300;">${esc(item.date)}</span>` : ""}
+          
           <span id="bannerDots" style="display:${_bannerItems.length >= 2 ? 'flex' : 'none'};gap:5px;align-items:center;margin-left:auto;"></span>
         </div>
         <span class="hero-news-text">${item.title ? esc(item.title) : esc(item.text || "")}</span>
@@ -1358,7 +1358,7 @@ function _showBannerItem(idx) {
         });
       }
     } else {
-      text.textContent = (item.date ? item.date + "　" : "") + (item.title || item.text || "");
+      text.textContent = item.title || item.text || "";
       // PCドット更新
       if (dotsWrap) {
         Array.from(dotsWrap.children).forEach((d, i) => {
