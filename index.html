@@ -440,6 +440,17 @@ body { background:var(--bg2); color:var(--text); font-family:'Noto Serif JP',ser
   .snapwidget-area iframe{ height:360px; }
 }
 
+/* ============================================================  SNS  */
+.sns-section{position:relative;z-index:2;padding:0 48px 56px;}
+.sns-inner{background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid rgba(139,92,246,.15);border-radius:22px;padding:28px 32px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:20px;text-align:center;}
+.sns-text{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--mid);letter-spacing:1px;}
+.sns-btns{display:flex;gap:12px;flex-wrap:wrap;width:100%;justify-content:center;}
+.sns-btn{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:1.5px;padding:14px 0;border-radius:22px;text-decoration:none;cursor:pointer;transition:transform .25s,box-shadow .25s;border:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:200px;}
+.sns-btn:hover{transform:translateY(-3px);}
+.sb-ameba{background:white;color:#16a34a;border:1.5px solid #16a34a;}
+.sb-ig{background:white;color:#be185d;border:1.5px solid #be185d;}
+.sb-fb{background:white;color:#1d4ed8;border:1.5px solid #1d4ed8;}
+
 /* ============================================================  Q&A  */
 .qna-section{position:relative;z-index:2;padding:0 48px 56px;}
 .qna-frame{background:white;border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:var(--shadow);}
@@ -650,6 +661,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:24
   .photo-gallery{padding:0 20px 44px;grid-template-columns:repeat(2,1fr);}
   .collection{padding:0 20px 44px;grid-template-columns:1fr;}
   .ig-section{padding:0 20px 44px;}
+  .sns-section{padding:0 20px 44px;}
+  .sns-btns{flex-direction:column;align-items:center;}
+  .sns-btn{width:180px;}
   .ig-head{flex-direction:column;align-items:flex-start;gap:16px;}
   .ig-follow{width:100%;}
   .access-section{padding:0 20px 44px;grid-template-columns:1fr;}
@@ -882,6 +896,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:24
     </div>
     <!-- ▲▲▲ SnapWidget ここまで ▲▲▲ -->
 
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider reveal"><div class="div-line"></div><div class="div-label">✦ SNS ✦</div><div class="div-line"></div></div>
+
+<!-- SNS -->
+<section class="sns-section reveal" id="sns-section" data-scroll-section>
+  <div class="sns-inner">
+    <div class="sns-text">日々の情報は、SNSで配信しております。</div>
+    <div class="sns-btns">
+      <a class="sns-btn sb-ameba" href="https://ameblo.jp/tfg1029/" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" stroke="#16a34a" stroke-width="1.5"/><rect x="3.5" y="4" width="9" height="1.5" rx="0.75" fill="#16a34a"/><rect x="3.5" y="7" width="9" height="1.5" rx="0.75" fill="#16a34a"/><rect x="3.5" y="10" width="6" height="1.5" rx="0.75" fill="#16a34a"/></svg>
+        Amebaブログ
+      </a>
+      <a class="sns-btn sb-ig" href="https://www.instagram.com/tfg_kousekino_sumika/" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="13" height="13" rx="4" stroke="#be185d" stroke-width="1.5"/><circle cx="8" cy="8" r="3" stroke="#be185d" stroke-width="1.5"/><circle cx="11.5" cy="4.5" r="1" fill="#be185d"/></svg>
+        Instagram
+      </a>
+      <a class="sns-btn sb-fb" href="https://www.facebook.com/profile.php?id=100013163796296" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" fill="#1d4ed8"/><path d="M9 14V9.5h1.5L10.8 7.5H9V6.5c0-.5.2-1 1-1H11V3.8S10.5 3.7 9.8 3.7c-1.5 0-2.5 1-2.5 2.6V7.5H5.5v2H7.3V14H9z" fill="white"/></svg>
+        Facebook
+      </a>
+    </div>
   </div>
 </section>
 
