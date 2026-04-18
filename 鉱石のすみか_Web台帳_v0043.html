@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鉱石のすみか　Webサイト管理資料 v0043</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif; font-size: 14px; line-height: 1.8; color: #1e1040; background: #f7f3ff; padding: 40px 24px; }
+.container { max-width: 960px; margin: 0 auto; background: white; border-radius: 16px; padding: 48px 56px; box-shadow: 0 4px 24px rgba(139,92,246,0.09); }
+
+/* ヘッダー */
+.doc-header { border-bottom: 3px solid #8b5cf6; padding-bottom: 24px; margin-bottom: 28px; }
+.doc-title { font-size: 22px; font-weight: 700; color: #1e1040; letter-spacing: 2px; margin-bottom: 8px; }
+.doc-subtitle { font-size: 12px; color: #8b7ab8; letter-spacing: 1px; }
+
+/* 固定ナビ */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(253,249,255,0.97); backdrop-filter: blur(10px);
+  border: 1px solid #e0d9f7; border-radius: 12px;
+  padding: 10px 16px; margin-bottom: 32px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  box-shadow: 0 2px 12px rgba(139,92,246,0.08);
+}
+.nav-label { font-size: 11px; color: #8b7ab8; margin-right: 4px; white-space: nowrap; }
+.nav-btn {
+  font-size: 12px; color: #4c3880; text-decoration: none;
+  padding: 4px 12px; border-radius: 20px;
+  border: 1px solid #e0d9f7; background: #fdf9ff;
+  cursor: pointer; white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-btn:hover { background: #ede9fe; color: #6d28d9; }
+
+/* セクション */
+.section { margin-bottom: 48px; }
+.section-title { font-size: 15px; font-weight: 700; color: #8b5cf6; letter-spacing: 2px; border-left: 4px solid #8b5cf6; padding-left: 12px; margin-bottom: 20px; }
+.section-sub { font-size: 12px; font-weight: 700; color: #4c3880; letter-spacing: 1px; margin: 20px 0 8px 0; padding-left: 8px; border-left: 2px solid #c4b5fd; }
+
+/* テーブル共通 */
+table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px; }
+th { background: #ede9fe; color: #4c3880; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #c4b5fd; letter-spacing: 0.5px; white-space: nowrap; }
+td { padding: 7px 12px; border: 1px solid #e5e7eb; vertical-align: middle; line-height: 1.6; }
+tr:nth-child(even) td { background: #faf9ff; }
+tr:hover td { background: #f5f3ff; }
+.nowrap { white-space: nowrap; }
+.ver-col { width: 110px; white-space: nowrap; font-weight: 600; color: #8b5cf6; }
+.task-col { width: 80px; }
+.status-col { width: 90px; text-align: center; }
+
+/* バッジ */
+.priority-high { background: #fce7f3; color: #be185d; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; white-space: nowrap; }
+.priority-mid  { background: #fff7ed; color: #92400e; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; white-space: nowrap; }
+.priority-low  { background: #f0fdf4; color: #166534; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; white-space: nowrap; }
+.status-done { background: #f0fdf4; color: #166534; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+.status-wip  { background: #eff6ff; color: #1e40af; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+.status-open { background: #f3f4f6; color: #374151; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+
+/* 列構成グリッド */
+.col-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 12px 0; }
+.col-cell { background: #faf9ff; border: 1px solid #e0d9f7; border-radius: 8px; padding: 8px 4px; text-align: center; }
+.col-cell .col-name { font-size: 10px; color: #8b7ab8; margin-bottom: 2px; }
+.col-cell .col-label { font-size: 11px; color: #1e1040; font-weight: 700; line-height: 1.3; }
+.col-cell.highlight { background: #ede9fe; border-color: #c4b5fd; }
+.col-cell.highlight .col-label { color: #4c1d95; }
+
+/* 色見本 */
+.color-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,0.1); }
+
+/* コードブロック */
+.code-block { position: relative; background: #1e1040; border-radius: 10px; padding: 20px 24px; overflow-x: auto; margin-top: 8px; }
+.code-block pre { font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 11px; color: #e0d7ff; line-height: 1.7; white-space: pre; }
+.copy-btn { position: absolute; top: 10px; right: 12px; background: #6d28d9; color: white; border: none; border-radius: 6px; padding: 4px 12px; font-size: 11px; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+.copy-btn:hover { background: #7c3aed; }
+.copy-btn.copied { background: #065f46; }
+
+/* 注釈ボックス */
+.note { background: #fdf9ff; border-left: 3px solid #a78bfa; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #4c3880; margin-top: 8px; line-height: 1.8; }
+.done { background: #f0fdf4; border-left: 3px solid #22c55e; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #166534; margin-top: 8px; line-height: 1.8; }
+.info { background: #eff6ff; border-left: 3px solid #60a5fa; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #1e40af; margin-top: 8px; line-height: 1.8; }
+.warn { background: #fffbeb; border-left: 3px solid #fbbf24; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #92400e; margin-top: 8px; line-height: 1.8; }
+
+/* 制作ルール */
+.rules-list { list-style: none; padding: 0; }
+.rules-list > li { padding: 10px 0 10px 20px; position: relative; border-bottom: 1px solid rgba(139,92,246,0.08); font-size: 13px; color: #1e1040; font-weight: 700; }
+.rules-list > li::before { content: '✦'; position: absolute; left: 0; color: #a78bfa; font-size: 10px; top: 13px; }
+.rules-sub { list-style: none; padding: 6px 0 0 16px; }
+.rules-sub li { position: relative; border-bottom: none; padding: 3px 0 3px 16px; font-size: 12px; color: #4c3880; font-weight: 400; }
+.rules-sub li::before { content: '–'; color: #a78bfa; position: absolute; left: 0; }
+
+/* 折りたたみ */
+.fold-toggle { font-size: 11px; color: #8b7ab8; background: none; border: 1px solid #e0d9f7; border-radius: 10px; padding: 3px 12px; cursor: pointer; margin-top: 8px; display: block; }
+.fold-content { display: none; margin-top: 8px; }
+.fold-content.open { display: block; }
+
+@media print {
+  body { background: white; padding: 0; font-size: 12px; }
+  .container { box-shadow: none; border-radius: 0; padding: 20px 32px; max-width: 100%; }
+  .sticky-nav { display: none; }
+  .section { page-break-inside: avoid; margin-bottom: 32px; }
+  .code-block { page-break-inside: avoid; border: 1px solid #ccc; background: #f5f5f5; }
+  .code-block pre { color: #1e1040; font-size: 9px; }
+  .copy-btn { display: none; }
+  table { page-break-inside: avoid; }
+  tr { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="doc-header">
+    <div class="doc-title">鉱石のすみか　Webサイト管理資料</div>
+    <div class="doc-subtitle">改修履歴・制作ルール・GASコード・次回タスク　／　2026年4月17日 更新（v0043）</div>
+  </div>
+
+  <!-- 固定ナビゲーション -->
+  <nav class="sticky-nav">
+    <span class="nav-label">ジャンプ：</span>
+    <a class="nav-btn" href="#sec-task">🔜 次回タスク</a>
+    <a class="nav-btn" href="#sec-env">🌐 環境・アカウント</a>
+    <a class="nav-btn" href="#sec-spec">📋 スプレッドシート仕様</a>
+    <a class="nav-btn" href="#sec-rule">📜 制作ルール</a>
+    <a class="nav-btn" href="#sec-gas">🔧 GASコード</a>
+    <a class="nav-btn" href="#sec-history">📝 改修履歴</a>
+    <a class="nav-btn" href="#sec-decision">✅ 確定事項</a>
+  </nav>
+
+  <!-- 1. 次回タスク -->
+  <div class="section" id="sec-task">
+    <div class="section-title">🔜 次回タスク</div>
+
+    <div class="section-sub">🔴 優先度高</div>
+    <table>
+      <thead><tr><th class="task-col">カテゴリ</th><th>タスク内容</th><th class="status-col">ステータス</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">公開作業</td><td>index124をGitHubにアップロード（index.htmlにリネーム）→ 鉱石のすみかさんへサイト確認依頼 → OKが出たらnoindexタグを削除して0125として公開</td><td><span class="status-wip">🔄 進行中</span></td></tr>
+        <tr><td class="nowrap">新デザイン</td><td>b0001の実装開始（Aパターン明るい版・新セクション構成）。デザイン方向性・セクション構成・「はじめての方へ」文言は確定済み。お店側のコンセプト文ヒアリング後に「お店について」セクションを完成させる</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">GAS</td><td>満月自動投稿の実装。満月2日前の深夜にスプレッドシートへ自動投稿（タイトル・本文・分類・Web表示ON）。天文計算ロジックが必要</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">ヒアリング</td><td>お店側にコンセプト文をヒアリング（「お店について」セクションの核心部分。b0001完成に必要）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">実機確認</td><td>iPhone SE・iPhone 14で実機確認 → ボトムナビの表示・タップ動作・アクティブ状態をスクショで共有</td><td><span class="status-done">✅ 完了</span></td></tr>
+        <tr><td class="nowrap">計測確認</td><td>Microsoft Clarityのデータ確認（設定翌日以降にヒートマップ・録画が表示されるか確認）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">SnapWidget</td><td>本番アカウント（tfg_kousekino_sumika）のIDに切り替え後、PC表示の高さ最終確認（現在はテスト用IDのまま）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">ボトムナビ</td><td>「お店について」セクションを新規作成し、ボトムナビのリンク先を#item-section（仮）から差し替え。b0001実装時に対応</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-sub">🟡 優先度中</div>
+    <table>
+      <thead><tr><th class="task-col">カテゴリ</th><th>タスク内容</th><th class="status-col">ステータス</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">コード品質</td><td>【精査②】バナータップ時のデフォルト表示中ジャンプ不動作：GAS取得前タップ時はidx=-1で何もしない挙動。意図通りか要確認・コメント追記検討</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">コード品質</td><td>【精査⑧】newsItemHTMLのonclick属性をEvent Delegation方式に変更（インラインonclick廃止）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">計測</td><td>GAリアルタイム計測の動作確認（kousekino-sumika.pages.devにアクセスしながらリアルタイムレポートで確認）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">計測</td><td>Chrome拡張「Google Analytics オプトアウト」をPCにインストール（自分のアクセスを除外）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">ファイル</td><td>faviconをjpg→png or icoに変換して差し替え（ブラウザ互換性改善）</td><td><span class="status-done">✅ 完了</span></td></tr>
+        <tr><td class="nowrap">ドキュメント</td><td>仕様書の作成（2パターン）：①概要版（運用担当者向け）②詳細版（引き継ぎ者向け・技術詳細）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">ドキュメント</td><td>お店の方向けの図解入り操作説明書の作成（スプレッドシートでのお知らせ更新手順など）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-sub">🔵 優先度低</div>
+    <table>
+      <thead><tr><th class="task-col">カテゴリ</th><th>タスク内容</th><th class="status-col">ステータス</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">ドメイン</td><td>独自ドメイン取得を検討（名刺・チラシ印刷の予定があれば優先度高に昇格）→ Cloudflare Pagesのカスタムドメイン設定</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. 環境・アカウント情報 -->
+  <div class="section" id="sec-env">
+    <div class="section-title">🌐 環境・アカウント情報</div>
+
+    <div class="section-sub">公開環境</div>
+    <table>
+      <thead><tr><th style="width:200px;">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap"><strong>公開URL（現在）</strong></td><td><strong>https://kousekino-sumika.pages.dev</strong></td></tr>
+        <tr><td class="nowrap">Cloudflare Pagesプロジェクト名</td><td>kousekino-sumika</td></tr>
+        <tr><td class="nowrap">Cloudflare ログインURL</td><td>https://dash.cloudflare.com/login</td></tr>
+        <tr><td class="nowrap">Cloudflare アカウント</td><td>tfg.kousekino.sumika&#64;gmail.com　／　パスワードは別途保管</td></tr>
+        <tr><td class="nowrap">GitHub リポジトリ</td><td>https://github.com/kousekino-sumika/kousekino-sumika</td></tr>
+        <tr><td class="nowrap">GitHub アカウント</td><td>tfg.kousekino.sumika&#64;gmail.com　／　パスワードは別途保管</td></tr>
+        <tr><td class="nowrap">GAS URL</td><td style="word-break:break-all;">https://script.google.com/macros/s/AKfycbziitAbrKunsAbSAjDmxc0m42P2hncwTAvlfG0i0NJY8dLh2oj3qo6wLYs60HnAECro/exec</td></tr>
+        <tr><td class="nowrap">画像フォルダ</td><td>img/（拡張子は .jpg 統一）</td></tr>
+      </tbody>
+    </table>
+    <div class="done">✅ Cloudflare PagesとGitHubの自動デプロイ連携済み。GitHubにindex.htmlをアップロードするだけで自動反映される。</div>
+
+    <div class="section-sub">計測ツール</div>
+    <table>
+      <thead><tr><th style="width:200px;">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">Googleアナリティクス 測定ID</td><td>G-X1NMBB6948</td></tr>
+        <tr><td class="nowrap">Microsoft Clarity プロジェクトID</td><td>waj1iaac0q</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-sub">SNS・外部連携</div>
+    <table>
+      <thead><tr><th style="width:200px;">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">Gmail</td><td>tfg.kousekino.sumika&#64;gmail.com</td></tr>
+        <tr><td class="nowrap">Instagram</td><td>@tfg_kousekino_sumika</td></tr>
+        <tr><td class="nowrap">Facebook</td><td>https://www.facebook.com/profile.php?id=100013163796296</td></tr>
+        <tr><td class="nowrap">Amebaブログ</td><td>https://ameblo.jp/tfg1029/</td></tr>
+        <tr><td class="nowrap">SnapWidget ID</td><td>1120344（※本番アカウントに切替要）</td></tr>
+      </tbody>
+    </table>
+    <div class="note">⚠️ パスワード類はこの資料には記載しない。各自でメモ帳等に保管すること。</div>
+
+    <div class="section-sub">GitHubアップロード手順</div>
+    <div class="info">
+      ① https://github.com/kousekino-sumika/kousekino-sumika を開く<br>
+      ② ローカルの最新 index###.html を <strong>index.html</strong> にリネーム<br>
+      ③ index.html を選択 → 右上「...」→「Upload file」でアップロード<br>
+      ④「Commit changes」の説明欄に <code>v1.21 更新</code> などバージョン番号を記入して保存<br>
+      ⑤ Cloudflare Pagesに自動デプロイされる
+    </div>
+
+    <div class="section-sub">GitHubバージョン管理（タグで過去版を保存）</div>
+    <div class="info">
+      アップロード後すぐにタグをつけておくと、いつでも過去バージョンに戻せる。<br><br>
+      ① リポジトリトップの「<strong>Releases</strong>」をクリック<br>
+      ② 「Create a new release」をクリック<br>
+      ③「Choose a tag」に <code>v1.21</code> など今回のバージョン番号を入力 → 「Create new tag: v1.21」を選択<br>
+      ④ タイトルに <code>index v1.21</code> と記入<br>
+      ⑤「Publish release」で完了 ✅<br><br>
+      過去版に戻したいとき：「Releases」→ 該当バージョン →「Source code (zip)」でダウンロード
+    </div>
+
+    <div class="section-sub">GitHubの警告・通知への対処</div>
+    <div class="warn">
+      ⚠️「Your main branch isn't protected」→ 1人運用のため意図的に未設定。Dismissしてok。落ち着いたタイミングで「Protect this branch」を設定予定。<br>
+      ⚠️ Cloudflare botのPull Request（「Add Cloudflare Workers...」）→「Close pull request」で閉じるだけでOK。マージしないこと。<br>
+      ⚠️「kousekino-sumika/kousekino-sumika」の特別リポジトリ案内 → GitHubの仕様。無視してOK。
+    </div>
+
+    <div class="section-sub">公開環境の変更履歴</div>
+    <table>
+      <thead><tr><th style="width:100px;">日付</th><th>変更内容</th><th style="width:120px;">状態</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">2026.04.12</td><td>Cloudflare Pages に移行・URL短縮（https://kousekino-sumika.pages.dev）／GitHubユーザー名・リポジトリ名を kouseki-no-sumika → kousekino-sumika に変更</td><td>✅ 現在の環境</td></tr>
+        <tr><td class="nowrap">2026.04.12以前</td><td>Cloudflare Workers で公開（URL：kouseki-no-sumika.tfg-kousekino-sumika.workers.dev）</td><td>廃止</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. スプレッドシート仕様 -->
+  <div class="section" id="sec-spec">
+    <div class="section-title">📋 スプレッドシート仕様</div>
+
+    <div class="section-sub">列構成（A〜G列）</div>
+    <div class="col-grid">
+      <div class="col-cell highlight"><div class="col-name">A列</div><div class="col-label">投稿日（自動）</div></div>
+      <div class="col-cell"><div class="col-name">B列</div><div class="col-label">バナー表示</div></div>
+      <div class="col-cell"><div class="col-name">C列</div><div class="col-label">Web表示</div></div>
+      <div class="col-cell"><div class="col-name">D列</div><div class="col-label">分類</div></div>
+      <div class="col-cell"><div class="col-name">E列</div><div class="col-label">タイトル</div></div>
+      <div class="col-cell"><div class="col-name">F列</div><div class="col-label">本文</div></div>
+      <div class="col-cell"><div class="col-name">G列</div><div class="col-label">リンクURL</div></div>
+    </div>
+    <div class="note">📝 A列（投稿日）はE列またはF列に入力すると当日の日付が自動入力される。手動変更も可。</div>
+
+    <div class="section-sub">行の色ルール</div>
+    <table>
+      <thead><tr><th style="width:180px;">色</th><th>意味</th></tr></thead>
+      <tbody>
+        <tr><td><span class="color-swatch" style="background:#d1fae5;"></span>明るい緑（#d1fae5）</td><td>GASが自動生成する行すべてに適用（__auto__フラグの行）。現在は定休日（自動）のみ実装済み。将来の誕生石自動投稿なども同じ色で統一</td></tr>
+        <tr><td><span class="color-swatch" style="background:#374151;"></span>ダークグレー（#374151）</td><td>投稿日から90日を超えた古い行。バナー（B列）・Web表示（C列）を自動オフ</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-sub">GAS関数の役割</div>
+    <table>
+      <thead><tr><th style="width:160px;">関数名</th><th>役割</th><th style="width:120px;">実行タイミング</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap"><code>doGet</code></td><td>WebサイトにJSONを返す。列構成変更時はデプロイが必要</td><td>Webサイト読み込み時</td></tr>
+        <tr><td class="nowrap"><code>onEdit</code></td><td>E・F列入力時にA列へ日付を自動入力。A列編集時にメモを自動復元</td><td>スプレッドシート編集時</td></tr>
+        <tr><td class="nowrap"><code>hideOldRows</code></td><td>深夜一括処理のまとめ役。applyGrayOut・ensureInputRows・upsertAutoRowを呼び出す</td><td>深夜（時間ベーストリガー）</td></tr>
+        <tr><td class="nowrap"><code>applyGrayOut</code></td><td>90日超の行をグレーアウト。B列・C列チェックをオフ</td><td>hideOldRows経由</td></tr>
+        <tr><td class="nowrap"><code>ensureInputRows</code></td><td>2〜6行目をテンプレート行として整備（チェックなし・分類「----------」）</td><td>hideOldRows経由</td></tr>
+        <tr><td class="nowrap"><code>upsertAutoRow</code></td><td>定休日（自動）行を管理。火曜深夜にバナーオン・木曜深夜にバナーオフ＋次週木曜タイトルに更新</td><td>hideOldRows経由</td></tr>
+        <tr><td class="nowrap"><code>setNoteToAllDates</code></td><td>A列全行にメモを一括設定（初回のみ実行）</td><td>手動実行</td></tr>
+        <tr><td class="nowrap"><code>testAutoRow</code></td><td>upsertAutoRowの動作確認用（バナーオンで手動実行）</td><td>手動実行</td></tr>
+        <tr><td class="nowrap"><code>testGrayOut</code></td><td>applyGrayOutの動作確認用</td><td>手動実行</td></tr>
+        <tr><td class="nowrap"><code>testEnsureInputRows</code></td><td>ensureInputRowsの動作確認用</td><td>手動実行</td></tr>
+      </tbody>
+    </table>
+    <div class="warn">⚠️ doGet（Webサイトへのデータ配信）を変更したときだけデプロイが必要。それ以外の関数はコード保存（Ctrl+S）のみでOK。</div>
+  </div>
+
+  <!-- 4. 制作ルール -->
+  <div class="section" id="sec-rule">
+    <div class="section-title">📜 制作ルール</div>
+    <ul class="rules-list">
+      <li>サイトの方針
+        <ul class="rules-sub">
+          <li>商品はほぼ一点もののため、Webサイトでの商品販売は行わない</li>
+          <li>実店舗への来店促進がWebサイトの目的</li>
+        </ul>
+      </li>
+      <li>ファイル管理
+        <ul class="rules-sub">
+          <li>正式ライン：0125, 0126…（四桁）で連番管理。現行公開サイトの継続改修に使用</li>
+          <li>ベータライン：b0001, b0002…（四桁）で管理。新デザイン・新構成の実験に使用。完成・承認されたら正式ラインに移行（目安2〜3ヶ月）</li>
+          <li>変更のたびに新しい番号で保存</li>
+          <li>管理資料ファイル名：鉱石のすみかWeb管理資料_v####.html（例：v0042→v0043）※四桁</li>
+        </ul>
+      </li>
+      <li>進め方
+        <ul class="rules-sub">
+          <li>いきなりコーディングしない。提案 → OK確認 → コーディングの順で進める</li>
+          <li>提案前に現状・仕様・前提条件を確認・整理する</li>
+          <li>提案時はメリット・デメリット・影響範囲を明示する</li>
+          <li>指示された箇所以外は勝手に変更しない。改善点があれば根拠を明示したうえで提案する</li>
+          <li>不明点は着手前にまとめて質問する。曖昧なまま進めない</li>
+          <li>エラーが同じ方法で3回続いたら、別のアプローチを提案する</li>
+        </ul>
+      </li>
+      <li>コード・ファイルの提供
+        <ul class="rules-sub">
+          <li>コード修正時はファイル全体を提供する（間違い防止のため。2000行超は要相談）</li>
+          <li>GASコードを修正した場合は、コード全体をコピーボタン付きで必ず提示する</li>
+          <li>indexを出力するときは、管理資料も必ず同時に更新・出力する（漏れ防止）</li>
+          <li>コードには必ずコメントをつける</li>
+        </ul>
+      </li>
+      <li>説明・出力スタイル
+        <ul class="rules-sub">
+          <li>説明は結論 → 理由の順で書く</li>
+          <li>忖度せず、リスクや懸念点を含めて率直に伝える</li>
+          <li>制約や手間・注意点は先にセットで伝える（後出しにしない）</li>
+          <li>選択肢を提示するときは、テキスト箇条書きではなくボタン式（ask_user_input）で表示する</li>
+        </ul>
+      </li>
+      <li>スマホ確認方法
+        <ul class="rules-sub">
+          <li>実機確認推奨：iPhone SE（基準）→ iPhone 14（メイン）→ iPad Air（タブレット確認）</li>
+          <li>PCでの確認：DevToolsでスマホ表示にしてからGoFullPageでキャプチャ → Claudeに共有</li>
+          <li>DevToolsエミュレーションと実機は微妙にズレるため最終確認は実機で行う</li>
+        </ul>
+      </li>
+      <li>資料内メールアドレスの書き方
+        <ul class="rules-sub">
+          <li><strong>@</strong> を <code>&#38;#64;</code> と書くこと（Cloudflareの自動難読化を回避するため）</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 5. GAS最終コード -->
+  <div class="section" id="sec-gas">
+    <div class="section-title">🔧 GAS最終コード</div>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyGAS(this)">コピー</button>
+      <pre id="gas-code">/* ================================================================
+   定数
+================================================================ */
+const SHEET_NAME = "お知らせ";
+const HIDE_DAYS  = 90;
+const AUTO_FLAG  = "__auto__";
+
+/* ================================================================
+   空白行判定ヘルパー
+================================================================ */
+function isEmptyRow(row) {
+  // E列=インデックス4（タイトル）、F列=インデックス5（本文）は列移動後も変わらず
+  const e = String(row[4] || "").trim();
+  const f = String(row[5] || "").trim();
+  return e === "" && f === "";
+}
+
+/* ================================================================
+   次の木曜日を返すヘルパー
+================================================================ */
+function getNextThursday(baseDate) {
+  const d = new Date(baseDate);
+  const day = d.getDay();
+  const diff = day <= 4 ? 4 - day : 4 - day + 7;
+  const add = diff === 0 ? 7 : diff;
+  d.setDate(d.getDate() + add);
+  return d;
+}
+
+/* ================================================================
+   木曜日の日付を「○月○日（木）」形式タイトルに変換
+================================================================ */
+function formatThursdayTitle(date) {
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  return m + "月" + d + "日（木）は定休日のため、お休みさせていただきます。";
+}
+
+/* ================================================================
+   __auto__ 行を管理する関数
+   bannerOn: true=バナーオン / false=バナーオフ
+================================================================ */
+function upsertAutoRow(sheet, bannerOn) {
+  const today = new Date();
+  const nextThursday = getNextThursday(today);
+  const title = formatThursdayTitle(nextThursday);
+  const lastRow = sheet.getLastRow();
+
+  let autoRowIndex = -1;
+  if (lastRow >= 2) {
+    // F列（列番号6）の__auto__フラグで自動行を検索
+    const fCol = sheet.getRange(2, 6, lastRow - 1, 1).getValues();
+    for (let i = 0; i < fCol.length; i++) {
+      if (String(fCol[i][0]).trim() === AUTO_FLAG) {
+        autoRowIndex = i + 2;
+        break;
+      }
+    }
+  }
+
+  if (autoRowIndex === -1) {
+    const insertRow = lastRow + 1;
+    if (insertRow > sheet.getMaxRows()) {
+      sheet.insertRowsAfter(sheet.getMaxRows(), 1);
+    }
+    autoRowIndex = insertRow;
+  }
+
+  // 新列構成：A(1)=投稿日, B(2)=バナー, C(3)=Web表示, D(4)=分類, E(5)=タイトル, F(6)=AUTO_FLAG, G(7)=URL
+  sheet.getRange(autoRowIndex, 1).setValue(today);              // A列：投稿日
+  sheet.getRange(autoRowIndex, 1).setNumberFormat("yyyy.mm.dd");
+  sheet.getRange(autoRowIndex, 2).setValue(bannerOn);           // B列：バナー表示
+  sheet.getRange(autoRowIndex, 3).setValue(true);               // C列：Web表示
+  sheet.getRange(autoRowIndex, 4).setValue("定休日（自動）");   // D列：分類
+  sheet.getRange(autoRowIndex, 5).setValue(title);              // E列：タイトル
+  sheet.getRange(autoRowIndex, 6).setValue(AUTO_FLAG);          // F列：AUTO_FLAG
+  sheet.getRange(autoRowIndex, 7).setValue("");                 // G列：URL
+  // AUTO行は明るい緑（自動生成行の統一カラー）
+  sheet.getRange(autoRowIndex, 1, 1, 7).setBackground("#d1fae5");
+  sheet.getRange(autoRowIndex, 1, 1, 7).setFontColor("#065f46");
+}
+
+/* ================================================================
+   テンプレート行（2〜6行目）を空白入力欄として確保
+================================================================ */
+function ensureInputRows(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+  const allData  = sheet.getRange(2, 1, lastRow - 1, 7).getValues();
+  const dataRows = allData.filter(row => !isEmptyRow(row));
+  dataRows.sort((a, b) => {
+    // A列(インデックス0)=投稿日でソート
+    const da = a[0] instanceof Date ? a[0].getTime() : 0;
+    const db = b[0] instanceof Date ? b[0].getTime() : 0;
+    return db - da;
+  });
+  sheet.getRange(2, 1, lastRow - 1, 7).clearContent();
+  sheet.getRange(2, 1, 5, 7).setBackground(null).setFontColor(null); // テンプレート行2〜6行目のみ色リセット
+  // 新列構成：A(1)=投稿日, B(2)=バナー, C(3)=Web表示, D(4)=分類
+  // DATE_NOTE定数（onEdit冒頭で定義）を参照して重複を排除
+  for (let i = 2; i <= 6; i++) {
+    sheet.getRange(i, 1).setNote(DATE_NOTE);     // A列：投稿日メモ
+    sheet.getRange(i, 2).setValue(false);         // B列：バナー表示
+    sheet.getRange(i, 3).setValue(false);         // C列：Web表示
+    sheet.getRange(i, 4).setValue("----------"); // D列：分類
+  }
+  if (dataRows.length > 0) {
+    const neededLastRow = 6 + dataRows.length;
+    if (neededLastRow > sheet.getMaxRows()) {
+      sheet.insertRowsAfter(sheet.getMaxRows(), neededLastRow - sheet.getMaxRows());
+    }
+    sheet.getRange(7, 1, dataRows.length, 7).setValues(dataRows);
+  }
+  // 全行（2行目以降）の垂直配置を上揃えに統一
+  sheet.getRange(2, 1, sheet.getLastRow() - 1, 7).setVerticalAlignment("top");
+}
+
+/* ================================================================
+   90日経過行をグレーアウト＋B列・C列チェックを自動オフ
+   ※AUTO行（__auto__）は対象外
+================================================================ */
+function applyGrayOut(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 7) return;
+  const today = new Date();
+  for (let i = 7; i <= lastRow; i++) {
+    const dateVal  = sheet.getRange(i, 1).getValue();                // A列：投稿日
+    const autoFlag = String(sheet.getRange(i, 6).getValue()).trim(); // F列：AUTO_FLAG
+    const range    = sheet.getRange(i, 1, 1, 7);
+    // AUTO行はスキップ（緑色を維持）
+    if (autoFlag === AUTO_FLAG) continue;
+    if (dateVal instanceof Date) {
+      const diff = (today - dateVal) / (1000 * 60 * 60 * 24);
+      if (diff > HIDE_DAYS) {
+        range.setBackground("#374151");
+        range.setFontColor("#f9fafb");
+        sheet.getRange(i, 2).setValue(false); // B列：バナー表示オフ
+        sheet.getRange(i, 3).setValue(false); // C列：Web表示オフ
+      } else {
+        range.setBackground(null);
+        range.setFontColor(null);
+      }
+    } else {
+      // 日付なし行：既存の黒背景をリセット
+      range.setBackground(null);
+      range.setFontColor(null);
+    }
+  }
+}
+
+/* ================================================================
+   doGet：WebサイトにJSONを返す（__auto__フラグは本文に表示しない）
+   ⚠️ この関数を変更したときはデプロイが必要
+================================================================ */
+function doGet(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+  const rows = sheet.getDataRange().getValues();
+  const BADGE_MAP = {
+    "新商品入荷":     "new",
+    "新商品":         "new",
+    "誕生石":         "gem",
+    "お知らせ":       "info",
+    "臨時休業":       "closed",
+    "定休日":         "holiday",
+    "定休日（自動）": "holiday"
+  };
+  const today = new Date();
+  const news = rows.slice(1)
+    .filter(row => {
+      if (row[2] !== true) return false;           // C列(2)：Web表示チェック
+      if (!row[4] && !row[5]) return false;        // E列(4)：タイトル、F列(5)：本文
+      if (row[0] instanceof Date) {                // A列(0)：投稿日
+        const diff = (today - row[0]) / (1000 * 60 * 60 * 24);
+        if (diff > HIDE_DAYS) return false;
+      }
+      return true;
+    })
+    .map(row => ({
+      banner: row[1] === true ? "バナーに表示" : "",  // B列(1)：バナー表示
+      badge:  row[3] && BADGE_MAP[row[3]] ? "badge-" + BADGE_MAP[row[3]] : "", // D列(3)：分類
+      date:   row[0] instanceof Date               // A列(0)：投稿日
+                ? Utilities.formatDate(row[0], "Asia/Tokyo", "yyyy.MM.dd")
+                : row[0] ? String(row[0]).slice(0, 10).replace(/\//g, ".") : "",
+      title:  String(row[4] || ""),                // E列(4)：タイトル
+      text:   String(row[5] || "") === AUTO_FLAG ? "" : String(row[5] || ""), // F列(5)：本文
+      url:    row[6] ? String(row[6]) : ""         // G列(6)：URL
+    }))
+    .sort((a, b) => b.date.localeCompare(a.date));
+  return ContentService
+    .createTextOutput(JSON.stringify(news))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/* ================================================================
+   onEdit：E列またはF列入力でA列に日付自動入力
+            A列編集時にメモが消えていたら自動復元
+================================================================ */
+const DATE_NOTE = "投稿日は【自動入力】されます。\n変更したい場合はセルをクリックしてカレンダーから選んでください。";
+
+function onEdit(e) {
+  try {
+    const sheet = e.source.getActiveSheet();
+    if (sheet.getName() !== SHEET_NAME) return;
+    const row = e.range.getRow();
+    const col = e.range.getColumn();
+
+    // E列(5)またはF列(6)入力時：A列(1)に日付自動入力
+    if ((col === 5 || col === 6) && row >= 2) {
+      const dateCell = sheet.getRange(row, 1); // A列
+      if (!dateCell.getValue()) {
+        dateCell.setValue(new Date());
+        dateCell.setNumberFormat("yyyy.mm.dd");
+      }
+      // A列メモも復元
+      if (!dateCell.getNote()) dateCell.setNote(DATE_NOTE);
+    }
+
+    // A列(1)編集時：メモが消えていたら自動復元
+    if (col === 1 && row >= 2) {
+      const dateCell = sheet.getRange(row, 1);
+      if (!dateCell.getNote()) dateCell.setNote(DATE_NOTE);
+    }
+  } catch(err) {
+    // エラーを無視して続行（GASログには記録）
+    console.error("onEdit error:", err);
+  }
+}
+
+/* ================================================================
+   A列全行にメモを一括設定（初回のみ実行・以降はonEditで自動復元）
+================================================================ */
+function setNoteToAllDates() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+  for (let i = 2; i <= lastRow; i++) {
+    sheet.getRange(i, 1).setNote(DATE_NOTE); // A列
+  }
+  SpreadsheetApp.getUi().alert("完了\nA列 " + (lastRow - 1) + "行にメモを設定しました。");
+}
+
+/* ================================================================
+   深夜一括処理（時間ベーストリガーで自動実行）
+================================================================ */
+function hideOldRows() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+  const today = new Date();
+  const dow = today.getDay(); // 0=日,1=月,2=火,3=水,4=木
+  if (dow === 2) upsertAutoRow(sheet, true);  // 火曜深夜：バナーオン
+  if (dow === 4) upsertAutoRow(sheet, false); // 木曜深夜：バナーオフ・次週木曜に更新
+  applyGrayOut(sheet);
+  ensureInputRows(sheet);
+  formatDateColumn(sheet); // A列日付フォーマット統一
+}
+
+/* ================================================================
+   A列（投稿日）の日付フォーマットを yyyy.mm.dd に統一
+   ※Dateオブジェクトの行のみ対象。文字列行はスキップ
+================================================================ */
+function formatDateColumn(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+  const dateRange = sheet.getRange(2, 1, lastRow - 1, 1);
+  dateRange.setNumberFormat("yyyy.mm.dd"); // 全行に一括適用
+}
+
+/* ================================================================
+   動作確認用テスト関数（常設。本番には影響しない）
+================================================================ */
+function testAutoRow() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+  upsertAutoRow(sheet, true);
+}
+
+function testGrayOut() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+  applyGrayOut(sheet);
+  SpreadsheetApp.getUi().alert("applyGrayOut 実行完了\nスプレッドシートを確認してください。");
+}
+
+function testEnsureInputRows() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+  ensureInputRows(sheet);
+  SpreadsheetApp.getUi().alert("ensureInputRows 実行完了\n2〜6行目がテンプレート行になっているか確認してください。");
+}
+
+/* ================================================================
+   日付フォーマット確認用テスト関数
+================================================================ */
+function testFormatDateColumn() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+  formatDateColumn(sheet);
+  SpreadsheetApp.getUi().alert("formatDateColumn 実行完了\nA列の日付フォーマットを確認してください。");
+}</pre>
+    </div>
+    <div class="note">
+      ℹ️ GAS差し替え手順：① script.google.com を開く → ② 既存コードを全選択・削除 → ③ 上記「コピー」ボタンでコードをコピーして貼り付け → ④ 保存（Ctrl+S）
+    </div>
+  </div>
+
+  <!-- 6. 改修履歴 -->
+  <div class="section" id="sec-history">
+    <div class="section-title">📝 改修履歴</div>
+
+    <div class="section-sub">index改修履歴（最新5件）</div>
+    <table>
+      <thead><tr><th class="ver-col">バージョン</th><th>改修内容</th></tr></thead>
+      <tbody>
+        <tr><td class="ver-col">index124</td><td>全バッジの枠線を1px→0.5pxに統一（臨時休業含む）</td></tr>
+        <tr><td class="ver-col">index123</td><td>全バッジに枠線追加（臨時休業：0.5px赤枠、他：同色系25%透明の薄枠）。臨時休業の左太線（border-left:3px solid #be123c）を削除</td></tr>
+        <tr><td class="ver-col">index122</td><td>ボトムナビのiPhone/Safari表示修正：①viewport-fit=coverを追加　②ボトムナビにenv(safe-area-inset-bottom)を追加（height・padding-bottom）　③back-to-top・フッターのpadding-bottomをセーフエリア対応　④hamburger CSSからflex-directionを分離（display:noneとの共存によるブラウザ解釈ズレを解消）</td></tr>
+        <tr><td class="ver-col">index121</td><td>スマホ用ボトムナビ実装。項目：📢お知らせ／💎商品一例（将来「お店について」に差し替え予定・リンク先は#item-section仮）／💬Q&A／InstagramSVGアイコン／📍アクセス。スマホ時ハンバーガー・ドロワーを非表示に変更。デザイン：薄紫半透明背景＋紫border-top・通常時var(--mid)・アクティブ時金色＋上部金色インジケーターライン。InstagramはグラデーションSVGアイコン（金→紫→ピンク）。スクロール連動アクティブJS追加。フッターpadding-bottom:80px追加</td></tr>
+        <tr><td class="ver-col">index120</td><td>favicon差し替え：jpg単体 → ico（16/32/48px内包）＋PNG32px＋PNG180px（apple-touch-icon）の3点構成に変更。SVGベジェ曲線で丸みのある✦（紺背景#0a0a50・金色#FFD700）をcairosvgで高品質レンダリング。&lt;head&gt;40行目を3行に差し替え</td></tr>
+      </tbody>
+    </table>
+    <button class="fold-toggle" onclick="toggleFold('old-index')">▼ 古いindex履歴を表示（index072〜119）</button>
+    <div class="fold-content" id="old-index">
+      <table style="margin-top:8px;">
+        <thead><tr><th class="ver-col">バージョン</th><th>改修内容</th></tr></thead>
+        <tbody>
+          <tr><td class="ver-col">index119</td><td>GoogleマップiframeURLをGoogleマップ共有機能から取得した正式URLに差し替え。&amp;output=embedを付加してショップカード非表示対応</td></tr>
+          <tr><td class="ver-col">index118</td><td>①お知らせ本文の改行反映：newsItemHTML内でesc後に.replace(/\n/g,"&lt;br&gt;")追加　②ナビボタン間に縦線追加：.nav-links li:not(:last-child)::after で幅1px・高さ12px・var(--border)色の縦線をCSSで追加</td></tr>
+          <tr><td class="ver-col">index114</td><td>バナー改修（B案）：バッジ横余白調整・横並び固定・テキスト1行省略・›矢印追加・タップでお知らせジャンプ・手動送り廃止・スマホ用二重要素削除</td></tr>
+          <tr><td class="ver-col">index113</td><td>お知らせバッジ「新商品入荷」の色を黄系→パープル系（#ede9fe/#4c1d95）に変更</td></tr>
+          <tr><td class="ver-col">index112</td><td>スマホお知らせ行padding 8px→4px・本文下padding調整（間延び解消）</td></tr>
+          <tr><td class="ver-col">index111</td><td>スマホお知らせ行padding 14px→8px・本文下padding調整（index112で更に調整）</td></tr>
+          <tr><td class="ver-col">index110</td><td>①投稿日Web非表示　②ナビ「アイテム」→「商品一例」　③本文インデント調整　④スマホバナードット2重表示バグ修正　⑤スマホ時PC用ドット・プログレスバーCSS非表示</td></tr>
+          <tr><td class="ver-col">index109</td><td>①isLoading宣言位置整理　②バナードット修正　③Googleマップ地図のみ表示　④Auroraスマホ対応　⑤パーティクルスマホ対応　⑥バナースマホ2段レイアウト　⑦著作権表記変更　⑧バナー複数記事対応</td></tr>
+          <tr><td class="ver-col">index108</td><td>①charset先頭移動　②JSON-LD imageを絶対パス化　③OGP横長画像差し替え　④お知らせ空欄問題調査・修正</td></tr>
+          <tr><td class="ver-col">index107</td><td>Microsoft Clarity トラッキングタグをheadに追加（プロジェクトID：waj1iaac0q）</td></tr>
+          <tr><td class="ver-col">index106</td><td>OGP・構造化データのURLを更新（https://kousekino-sumika.pages.dev）・og:image絶対パス化</td></tr>
+          <tr><td class="ver-col">index105</td><td>noindexタグ追加（鉱石のすみか確認前の暫定措置）</td></tr>
+          <tr><td class="ver-col">index104</td><td>▼ボタンをnews-body内に移動・Cloudflare Workers → Pages移行・公開URL変更</td></tr>
+          <tr><td class="ver-col">index103</td><td>モバイルお知らせ2段レイアウト（バッジ＋日付／タイトル全幅）</td></tr>
+          <tr><td class="ver-col">index102</td><td>お知らせアコーディオン実装（タイトルあり＆本文あり行のみ▼ボタン・クリックで本文展開）</td></tr>
+          <tr><td class="ver-col">index101</td><td>newsItemHTML()修正：title・text両方表示・URLあり行はタイトルをリンク化</td></tr>
+          <tr><td class="ver-col">index100</td><td>お知らせ初期3件＋もっと見るボタン実装</td></tr>
+          <tr><td class="ver-col">index099</td><td>GA4タグ（G-X1NMBB6948）をheadタグ直後に埋め込み</td></tr>
+          <tr><td class="ver-col">index080〜098</td><td>アイテムカード虹色ボーダー・アニメーション／お知らせバッジ・リンクURL対応／バナー改修各種／スプレッドシート列構成変更</td></tr>
+          <tr><td class="ver-col">index072</td><td>【セッション1ベース】GAS連携・スライドショー7枚・Q&amp;Aセクション・タブ式アイテムグリッド実装済み</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-sub" style="margin-top:24px;">GAS改修履歴（最新5件）</div>
+    <table>
+      <thead><tr><th style="width:100px;">日付</th><th>改修内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">2026.04.17</td><td>ensureInputRows内のNOTE_TEXTローカル変数を削除し、定数DATE_NOTEを参照するよう統一（重複定義の解消）</td></tr>
+        <tr><td class="nowrap">2026.04.16</td><td>hideOldRowsにformatDateColumn呼び出しを追加。formatDateColumn関数を新規追加（A列2行目以降にsetNumberFormat("yyyy.mm.dd")を一括適用・深夜自動実行）。ensureInputRowsの末尾にsetVerticalAlignment("top")を追加（全行上揃えに統一）</td></tr>
+        <tr><td class="nowrap">2026.04.16</td><td>列構成変更（A=投稿日・B=バナー・C=Web表示・D=分類・E=タイトル・F=本文・G=URL）に伴い全関数の列番号を修正：doGet・onEdit・ensureInputRows・applyGrayOut・upsertAutoRow・setNoteToAllDates</td></tr>
+        <tr><td class="nowrap">2026.04.16</td><td>onEdit改修：A列メモ自動復元追加・DATE_NOTE定数追加。setNoteToAllDates関数追加（A列全行に一括メモ設定）</td></tr>
+        <tr><td class="nowrap">2026.04.16</td><td>onEdit改修：try-catchを追加（チェックボックス操作・複数セル一括編集時のエラー耐性向上。エラー率3.7%の対策）</td></tr>
+      </tbody>
+    </table>
+    <button class="fold-toggle" onclick="toggleFold('old-gas')">▼ 古いGAS履歴を表示</button>
+    <div class="fold-content" id="old-gas">
+      <table style="margin-top:8px;">
+        <thead><tr><th style="width:100px;">日付</th><th>改修内容</th></tr></thead>
+        <tbody>
+          <tr><td class="nowrap">2026.04.16</td><td>ensureInputRows改修：clearContent後にsetBackground(null).setFontColor(null)を追加（テンプレート行G列の色残留を防止）</td></tr>
+          <tr><td class="nowrap">2026.04.15</td><td>ensureInputRows改修：テンプレート行を2〜4→2〜6に拡張・データ開始行7行目に変更。BADGE_MAPに「新商品」「誕生石」追加。applyGrayOut開始行を7行目に変更</td></tr>
+          <tr><td class="nowrap">2026.04.14</td><td>AUTO行の背景色を薄紫→明るい緑（#d1fae5）に変更。applyGrayOutバグ修正（__auto__行・空日付行の黒背景残留を解消）</td></tr>
+          <tr><td class="nowrap">2026.04.14</td><td>定休日自動管理追加：AUTO_FLAGで自動行を識別。火曜深夜にバナーオン・木曜深夜にバナーオフ＋次週木曜タイトルに更新</td></tr>
+          <tr><td class="nowrap">2026.04.14</td><td>applyGrayOut改修：90日超の行はB列・C列チェックを自動オフ</td></tr>
+          <tr><td class="nowrap">2026.04.13</td><td>ensureInputRowsにシート行数チェックを追加（「シートのサイズから外れています」エラー修正）</td></tr>
+          <tr><td class="nowrap">—</td><td>doGet：C列TRUEのみWeb表示・B列TRUEのみバナー表示／列構成変更／90日経過行グレーアウト／深夜一括処理／入力欄確保／onEdit日付自動入力／日付降順ソート・BADGE_MAP追加</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-sub" style="margin-top:24px;">Googleマップ関連メモ</div>
+    <div class="note">
+      📍 サイトへの埋め込みはiframeに <code>&amp;output=embed</code> を付けて地図のみ表示する設定にしている。埋め込み地図上にショップカード（口コミ・評価パネル）は表示されない。ただしiframeをクリックしてGoogleマップアプリ・ブラウザで開いた場合はショップカードが表示される（これはGoogleが管理するものでサイト側からの制御不可）。
+    </div>
+  </div>
+
+  <!-- 7. 確定事項メモ -->
+  <div class="section" id="sec-decision">
+    <div class="section-title">✅ 確定事項メモ</div>
+
+    <div class="section-sub">新デザイン（bライン）方向性</div>
+    <table>
+      <thead><tr><th style="width:160px;">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">デザインパターン</td><td>Aパターン明るい版（薄紫×白・全体明るいトーン）。ヒーロー背景：#f3efff（薄紫）</td></tr>
+        <tr><td class="nowrap">セクション構成</td><td>お知らせバナー → ヒーロー → お知らせ → はじめての方へ → お店について → Instagramウィジェット → Q&A → アクセス → フッター</td></tr>
+        <tr><td class="nowrap">ロゴ</td><td>現行ロゴ（紺×金の円形バッジ）をそのまま使用。薄紫背景との相性OK</td></tr>
+        <tr><td class="nowrap">ボトムナビ</td><td>スマホ時固定・5項目（お知らせ／お店について／Q&A／Instagram／アクセス）</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-sub" style="margin-top:20px;">「はじめての方へ」セクション（確定）</div>
+    <table>
+      <thead><tr><th style="width:160px;">ブロック</th><th>確定内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">導入文</td><td>鉱石やパワーストーンのことを、よく知らなくても大丈夫です。「なんとなく気になった」「プレゼントに探している」そんな気持ちで、ふらっとお立ち寄りください。あなたにぴったりの石を探します。</td></tr>
+        <tr><td class="nowrap">特徴①</td><td>01 知識がなくても大丈夫 / 石の名前も効果も知らなくてOK。気になった石、好きな色、直感——それだけで十分です。</td></tr>
+        <tr><td class="nowrap">特徴②</td><td>02 スタッフが一緒に選びます / お一人おひとりのお話を聴きながら、あなたにぴったりの石をご提案します。</td></tr>
+        <tr><td class="nowrap">特徴③</td><td>03 すべて一点もの / 大自然が生み出した石は、どれも世界にひとつだけ。あなただけの出会いが、ここにあります。</td></tr>
+        <tr><td class="nowrap">ステップ1</td><td>お気軽に入店 / 予約なしでお越しいただけます。（ご予約も承ります）※最終入店時間：17時30分</td></tr>
+        <tr><td class="nowrap">ステップ2</td><td>スタッフにお声がけ / 石を眺めるだけでもOK。気になることがあれば、お気軽に声をかけてください。</td></tr>
+        <tr><td class="nowrap">ステップ3</td><td>一緒に石を選ぶ / お話を聴きながら、ぴったりの石を一緒に探します。じっくりとお選びください。</td></tr>
+        <tr><td class="nowrap">ステップ4</td><td>お持ち帰り / お選びいただいた石の扱い方・身につけ方・浄化の方法などもご説明させていただきます。</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-sub" style="margin-top:20px;">Q&A追記（確定）</div>
+    <div class="note">
+      Q. 何時まで入店できますか？<br>
+      A. 最終入店時間は17時30分です。当店はご説明をさせていただいての販売となりますので、最終入店時間を設けさせていただいております。営業時間は10:00〜18:00、木曜定休です。※急な出張などの予定は、ブログでお知らせいたします。
+    </div>
+
+    <div class="section-sub" style="margin-top:20px;">満月自動投稿（仕様確定）</div>
+    <table>
+      <thead><tr><th style="width:160px;">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">実行タイミング</td><td>満月の2日前の深夜（時間ベーストリガー）</td></tr>
+        <tr><td class="nowrap">投稿内容</td><td>分類：お知らせ / タイトル：「○月○日（曜）は満月です。月光浴のおすすめ🌕」/ 本文：月光浴の説明文（別途確定）/ Web表示：ON / バナー：OFF</td></tr>
+        <tr><td class="nowrap">実装状況</td><td>⬜ 未実装（次回実装予定）</td></tr>
+        <tr><td class="nowrap">次の満月</td><td>2026年5月1日（金）頃 → 投稿タイミングは4月29日深夜</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /.container -->
+</body>
+
+<script>
+/* ================================================================
+   GASコードのコピーボタン
+================================================================ */
+function copyGAS(btn) {
+  const pre = document.getElementById("gas-code");
+  if (!pre) return;
+  const text = pre.innerText || pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = "コピー完了 ✓";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "コピー"; btn.classList.remove("copied"); }, 2000);
+  }).catch(() => {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    btn.textContent = "コピー完了 ✓";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "コピー"; btn.classList.remove("copied"); }, 2000);
+  });
+}
+
+/* ================================================================
+   折りたたみトグル
+================================================================ */
+function toggleFold(id) {
+  const el = document.getElementById(id);
+  const btn = el.previousElementSibling;
+  el.classList.toggle("open");
+  const isOpen = el.classList.contains("open");
+  if (id === 'old-index') {
+    btn.textContent = isOpen ? "▲ 古いindex履歴を閉じる" : "▼ 古いindex履歴を表示（index072〜119）";
+  } else if (id === 'old-gas') {
+    btn.textContent = isOpen ? "▲ 古いGAS履歴を閉じる" : "▼ 古いGAS履歴を表示";
+  }
+}
+</script>
+</html>

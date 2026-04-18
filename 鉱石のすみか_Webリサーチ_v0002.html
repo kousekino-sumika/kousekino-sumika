@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鉱石のすみか　サイト改善リサーチまとめ</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  font-size: 14px; line-height: 1.8; color: #1e1040;
+  background: #f7f3ff; padding: 40px 24px;
+}
+.container {
+  max-width: 900px; margin: 0 auto; background: white;
+  border-radius: 16px; padding: 48px 56px;
+  box-shadow: 0 4px 24px rgba(139,92,246,0.09);
+}
+.doc-header { border-bottom: 3px solid #8b5cf6; padding-bottom: 24px; margin-bottom: 40px; }
+.doc-title { font-size: 22px; font-weight: 700; color: #1e1040; letter-spacing: 2px; margin-bottom: 8px; }
+.doc-subtitle { font-size: 12px; color: #8b7ab8; letter-spacing: 1px; }
+.section { margin-bottom: 48px; }
+.section-title {
+  font-size: 15px; font-weight: 700; color: #8b5cf6; letter-spacing: 2px;
+  border-left: 4px solid #8b5cf6; padding-left: 12px; margin-bottom: 20px;
+}
+.section-sub {
+  font-size: 12px; font-weight: 700; color: #4c3880; letter-spacing: 1px;
+  margin: 20px 0 8px 0; padding-left: 8px;
+  border-left: 2px solid #c4b5fd;
+}
+.rules-list { list-style: none; padding: 0; }
+.rules-list li {
+  padding: 8px 0 8px 20px; position: relative;
+  border-bottom: 1px solid rgba(139,92,246,0.08); font-size: 13px; color: #1e1040;
+}
+.rules-list li::before { content: '✦'; position: absolute; left: 0; color: #a78bfa; font-size: 10px; top: 11px; }
+.rules-sub { list-style: none; padding: 4px 0 0 16px; }
+.rules-sub li { border-bottom: none; padding: 3px 0 3px 16px; font-size: 12px; color: #4c3880; }
+.rules-sub li::before { content: '–'; color: #a78bfa; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px; }
+th { background: #ede9fe; color: #4c3880; font-weight: 700; padding: 10px 14px; text-align: left; border: 1px solid #c4b5fd; letter-spacing: 0.5px; }
+td { padding: 9px 14px; border: 1px solid #e5e7eb; vertical-align: top; line-height: 1.7; }
+tr:nth-child(even) td { background: #faf9ff; }
+tr:hover td { background: #f5f3ff; }
+.note { background: #fdf9ff; border-left: 3px solid #a78bfa; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #4c3880; margin-top: 8px; line-height: 1.8; }
+.done { background: #f0fdf4; border-left: 3px solid #22c55e; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #166534; margin-top: 8px; line-height: 1.8; }
+.info { background: #eff6ff; border-left: 3px solid #60a5fa; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #1e40af; margin-top: 8px; line-height: 1.8; }
+.warn { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 10px 16px; border-radius: 0 8px 8px 0; font-size: 12px; color: #92400e; margin-top: 8px; line-height: 1.8; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; white-space: nowrap; margin-right: 4px; }
+.tag-design  { background: #ede9fe; color: #6d28d9; }
+.tag-content { background: #fce7f3; color: #be185d; }
+.tag-ui      { background: #d1fae5; color: #065f46; }
+.tag-copy    { background: #fff7ed; color: #92400e; }
+.tag-apply   { background: #fef9c3; color: #713f12; }
+.site-label { font-weight: 700; color: #8b5cf6; }
+@media print {
+  body { background: white; padding: 0; font-size: 12px; }
+  .container { box-shadow: none; border-radius: 0; padding: 20px 32px; max-width: 100%; }
+  .section { page-break-inside: avoid; margin-bottom: 32px; }
+  table { page-break-inside: avoid; }
+  tr { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="doc-header">
+    <div class="doc-title">鉱石のすみか　サイト改善リサーチまとめ</div>
+    <div class="doc-subtitle">参考サイト調査・来店促進設計・コンテンツ方針・UI設計検討　／　2026年4月13日 更新（v002）</div>
+  </div>
+
+  <!-- 1. サイトの目的整理 -->
+  <div class="section">
+    <div class="section-title">1. サイトの目的整理</div>
+    <table>
+      <thead><tr><th>訪問者</th><th>サイトに来る目的</th><th>必要な情報</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>新規客</strong>（メインターゲット）</td>
+          <td>お店を知る・行くか判断する</td>
+          <td>雰囲気・世界観・商品イメージ・アクセス・営業時間・どんな人がいるか</td>
+        </tr>
+        <tr>
+          <td><strong>リピーター</strong></td>
+          <td>今日行けるか確認する</td>
+          <td>臨時休業・営業時間変更・お知らせ</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="info">
+      ℹ️ リピーターはInstagramやGoogleビジネスプロフィールで確認する行動が自然なため、Webサイトは<strong>ほぼ新規客専用</strong>と割り切れる。商品はほぼ一点ものでオンライン販売なし → 来店促進が唯一の目的。
+    </div>
+  </div>
+
+  <!-- 2. 参考サイト分析 -->
+  <div class="section">
+    <div class="section-title">2. 参考サイト分析</div>
+
+    <!-- Kamoku -->
+    <div class="section-sub">① Kamoku（カモク） ★メイン参考</div>
+    <div class="note">🔗 https://www.kamokuminerals.com／インテリア天然石・鉱物のネットショップ</div>
+    <table>
+      <thead><tr><th>カテゴリ</th><th>良いポイント</th><th>すみかへの応用</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-design">デザイン</span></td>
+          <td>白ベース背景で石の色が映える。写真が主役・テキスト最小限。余白を活かした構成。</td>
+          <td>商品写真を大きく・余白多めに見直す</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-design">デザイン</span></td>
+          <td>ローマ字ロゴ＋日本語サブテキストで和でも洋でもないブランド感を演出。</td>
+          <td>ロゴ・サイト名の表現を磨くヒントに</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-content">コンテンツ</span></td>
+          <td>「はじめての方へ」「タワー型がおすすめ」などライフスタイル提案型のカテゴリ分け。商品をただ並べず体験・用途で訴求。</td>
+          <td>アイテムセクションを「商品一例」として初めての方向けに再設計する</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-content">コンテンツ</span></td>
+          <td>PickUpセクションに「一言コピー＋価格帯」を添えてクリック前から価値が伝わる。</td>
+          <td>各商品カードに「こんな方に」の一言を追加</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-ui">UI</span></td>
+          <td>LINEへの導線を目立たせすぎず自然に組み込み。再来店・問い合わせにつながる。</td>
+          <td>LINE公式アカウントがあれば同様の導線を検討</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 穀雨 -->
+    <div class="section-sub">② 縁側のある美容室 穀雨</div>
+    <div class="note">🔗 https://www.kokuu-sotoha.com／愛知県弥富市の古民家風美容室</div>
+    <table>
+      <thead><tr><th>カテゴリ</th><th>良いポイント</th><th>すみかへの応用</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-copy">コピー</span></td>
+          <td>「ゆるり、キレイを育てる空間」というヒーローコピーが一瞬で世界観を伝える。サービス説明ではなく感情・体験に訴えている。</td>
+          <td>ヒーローテキストを「石との出会いを、ここで。」のような体験型コピーに磨く</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-content">コンテンツ</span></td>
+          <td>「穀雨について」「ソトハ式髪質改善ヘアエステ」など、店のコンセプト・強みを独立したページで丁寧に説明。</td>
+          <td>「はじめての方へ」セクションでお店のこだわり・石との向き合い方を説明する</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-content">コンテンツ</span></td>
+          <td>「お客様の声」ページがある。実際の来店者の感想が新規客の不安を取り除く。</td>
+          <td>お客様の声・Googleクチコミへの誘導を検討</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-design">デザイン</span></td>
+          <td>古民家の写真がファーストビューで大きく表示。「どんな場所か」が一瞬でわかる。</td>
+          <td>店内・石の写真をファーストビューでより大きく見せる</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-ui">UI</span></td>
+          <td>ナビゲーションにInstagramアイコンを自然に配置。SNSとWebの回遊が設計されている。</td>
+          <td>Instagram・Instagramへの導線をナビやフッターに配置</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- みずたまカフェ -->
+    <div class="section-sub">③ ゆずの木 ねむの木 みずたまの木（Storyページ）</div>
+    <div class="note">🔗 https://www.mizutama-cafe.com/story／九州の山奥にある手作りカフェ</div>
+    <table>
+      <thead><tr><th>カテゴリ</th><th>良いポイント</th><th>すみかへの応用</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-copy">コピー</span></td>
+          <td>「ないなら、つくろう！」という店誕生の物語が読み物として成立している。ストーリーに引き込まれて「行ってみたい」という気持ちが自然に生まれる構成。</td>
+          <td>お店が生まれた経緯・オーナーの思いを「ストーリー」として語るコンテンツを追加</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-content">コンテンツ</span></td>
+          <td>時系列で建物ができていく写真と文章。プロセスを見せることで愛着・共感が生まれる。</td>
+          <td>「なぜ鉱石のお店を開いたか」という店主のストーリーが来店動機に直結する</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-design">デザイン</span></td>
+          <td>写真と短い文章を交互に並べるだけのシンプルな構成。装飾を極力排除し、言葉と写真だけで世界観を作っている。</td>
+          <td>テキストと写真の交互配置はコーディングが簡単で効果が高い。すみかでも実現可能。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 3サイト比較まとめ -->
+    <div class="section-sub">📊 3サイト 比較まとめ</div>
+    <table>
+      <thead><tr><th>観点</th><th>Kamoku</th><th>穀雨</th><th>みずたまの木</th></tr></thead>
+      <tbody>
+        <tr><td>メインの強み</td><td>商品の見せ方・提案型コンテンツ</td><td>コピーライティング・サービス説明</td><td>ストーリーテリング・共感</td></tr>
+        <tr><td>ヒーローコピー</td><td>△ 商品名ベース</td><td>◎ 感情・体験に訴える</td><td>◎ 物語で引き込む</td></tr>
+        <tr><td>店主の人柄</td><td>△ 見えにくい</td><td>○ スタッフ紹介あり</td><td>◎ ストーリーで伝わる</td></tr>
+        <tr><td>初来訪者への配慮</td><td>◎ 「はじめての方へ」導線あり</td><td>○ 丁寧なサービス説明</td><td>○ 物語で敷居が下がる</td></tr>
+        <tr><td>デザインの洗練度</td><td>◎ シンプル・ミニマル</td><td>○ 写真主体・清潔感</td><td>○ 素朴・手作り感</td></tr>
+      </tbody>
+    </table>
+    <div class="info">
+      ℹ️ すみかは3サイトのいいとこ取りが理想。<strong>Kamokuの商品見せ方</strong>＋<strong>穀雨のコピーライティング</strong>＋<strong>みずたまのストーリー要素</strong>を組み合わせると、来店動機につながるサイトになる。
+    </div>
+  </div>
+
+  <!-- 3. コンテンツ方針 -->
+  <div class="section">
+    <div class="section-title">3. コンテンツ方針（決定・検討事項）</div>
+    <table>
+      <thead><tr><th>コンテンツ</th><th>方針</th><th>ステータス</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>お知らせ：今月の誕生石</strong></td>
+          <td>毎月の定期投稿として「今月の誕生石」を追加。新規客・リピーター両方に読まれるコンテンツ。スプレッドシートのお知らせ管理で運用。分類は「お知らせ」で投稿。</td>
+          <td>✅ 方針決定</td>
+        </tr>
+        <tr>
+          <td><strong>はじめての方へ（セクション）</strong></td>
+          <td>サイトは新規客専用と割り切った方向性に合致。「どんなお店か」「どんな石があるか」「来店の流れ」を説明するセクションを追加検討。Kamokuの「はじめての方へ」・穀雨の「穀雨について」が参考になる。</td>
+          <td>🔵 検討中</td>
+        </tr>
+        <tr>
+          <td><strong>アイテムセクションの再設計</strong></td>
+          <td>現行の「アイテムカード」を「初めての方への商品一例」として位置づけ直す。「こんな方に」の一言コピーを各カードに追加。Kamokuのライフスタイル提案型を参考に。</td>
+          <td>🔵 検討中</td>
+        </tr>
+        <tr>
+          <td><strong>店主ストーリー</strong></td>
+          <td>みずたまの木のStoryページが参考。「なぜ鉱石のお店を開いたか」という物語が来店動機に直結する。将来的に追加を検討。</td>
+          <td>⬜ 将来検討</td>
+        </tr>
+        <tr>
+          <td><strong>お客様の声</strong></td>
+          <td>穀雨のように来店者の感想を掲載。Googleクチコミへの誘導でも代替可能。</td>
+          <td>⬜ 将来検討</td>
+        </tr>
+        <tr>
+          <td><strong>スマホ：ボトムナビゲーション</strong></td>
+          <td>スマホ表示時に画面下部に固定するナビゲーションバーを検討。「ホーム・お知らせ・アクセス・Instagram」など主要導線をタップしやすい位置に配置。index300番台（スマホ優先ライン）での実装を想定。現行index100番台への追加も可能。メリット：親指で操作しやすい・来店動機につながるアクションへの導線が常時表示。デメリット：画面下部のコンテンツが隠れる・セーフエリア（iPhoneのホームバー）への対応が必要。</td>
+          <td>🔵 検討中</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. 来店促進サイトの共通パターン -->
+  <div class="section">
+    <div class="section-title">4. 来店促進サイトの共通パターン</div>
+    <ul class="rules-list">
+      <li>ファーストビューで「雰囲気」が伝わる
+        <ul class="rules-sub">
+          <li>店内・商品の写真が大きく配置されている</li>
+          <li>見た瞬間に「どんなお店か」がわかる</li>
+        </ul>
+      </li>
+      <li>「ここに行きたい」と思わせるコピー
+        <ul class="rules-sub">
+          <li>商品スペックの説明より体験・感情に訴える言葉を優先</li>
+          <li>短くてブランドらしい一言が効果的（例：穀雨「ゆるり、キレイを育てる空間」）</li>
+        </ul>
+      </li>
+      <li>アクセス・営業時間が迷わず見つかる
+        <ul class="rules-sub">
+          <li>初来店のハードルを下げる基本情報を目立つ位置に</li>
+          <li>地図・駐車場情報・目印の写真があると安心感が増す</li>
+        </ul>
+      </li>
+      <li>店主・スタッフの人柄が伝わる
+        <ul class="rules-sub">
+          <li>「どんな人がいるか」がわかると来店への不安が減る</li>
+          <li>写真1枚＋一言プロフィールだけでも効果あり</li>
+          <li>ストーリー形式（みずたまの木方式）が最も共感を生みやすい</li>
+        </ul>
+      </li>
+      <li>Instagram連携でリアルタイム感を演出
+        <ul class="rules-sub">
+          <li>「今どんな石があるか」が伝わることで来店動機になる</li>
+          <li>SnapWidget（iframe）は読み込みコストが高い。遅延読み込みまたはリンクボタン化を検討</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 5. SnapWidget軽量化メモ -->
+  <div class="section">
+    <div class="section-title">5. SnapWidget軽量化メモ</div>
+    <div class="warn">
+      ⚠️ 表示枚数を減らしても軽量化効果は小さい。重さの原因はiframe読み込み自体にある。
+    </div>
+    <table>
+      <thead><tr><th>方法</th><th>効果</th><th>デメリット</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>① 遅延読み込み（Lazy Load）</td>
+          <td>◎ 初期表示が速くなる。スクロールで近づいたときに読み込む</td>
+          <td>実装コードの追加が必要</td>
+        </tr>
+        <tr>
+          <td>② Instagramへのリンクボタンに変える</td>
+          <td>◎◎ iframeをなくすので最も軽くなる</td>
+          <td>サイト上でInstagram画像が見えなくなる</td>
+        </tr>
+        <tr>
+          <td>③ 表示枚数を減らす</td>
+          <td>△ 効果は小さい</td>
+          <td>見た目が変わる</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="info">
+      ℹ️ 「新規客専用サイト」と割り切るなら「Instagramはこちら →」のリンクボタン化が最もシンプル。来店促進の観点では「実際の商品写真を見てInstagramをフォロー → 来店」という流れを作れれば十分。
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
