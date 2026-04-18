@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鉱石のすみか　Webサイト管理資料 v0044</title>
+<title>鉱石のすみか　Webサイト管理資料 v0045</title>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -113,7 +113,7 @@ tr:hover td { background: #f5f3ff; }
 
   <div class="doc-header">
     <div class="doc-title">鉱石のすみか　Webサイト管理資料</div>
-    <div class="doc-subtitle">改修履歴・制作ルール・GASコード・次回タスク　／　2026年4月18日 更新（v0044）</div>
+    <div class="doc-subtitle">改修履歴・制作ルール・GASコード・次回タスク　／　2026年4月18日 更新（v0045）</div>
   </div>
 
   <!-- 固定ナビゲーション -->
@@ -185,7 +185,7 @@ tr:hover td { background: #f5f3ff; }
         <tr><td class="nowrap">GitHub リポジトリ</td><td>https://github.com/tfg1029/tfg1029</td></tr>
         <tr><td class="nowrap">GitHub アカウント</td><td>tfg.kousekino.sumika&#64;gmail.com　／　パスワードは別途保管</td></tr>
         <tr><td class="nowrap">GAS URL</td><td style="word-break:break-all;">https://script.google.com/macros/s/AKfycbziitAbrKunsAbSAjDmxc0m42P2hncwTAvlfG0i0NJY8dLh2oj3qo6wLYs60HnAECro/exec</td></tr>
-        <tr><td class="nowrap">画像フォルダ</td><td>img/（拡張子は .jpg 統一）</td></tr>
+        <tr><td class="nowrap">画像フォルダ</td><td>img/（通常画像は .jpg、ファビコン関連は .ico / .png も含む）</td></tr>
       </tbody>
     </table>
     <div class="done">✅ Cloudflare PagesとGitHubの自動デプロイ連携済み。GitHubにindex.htmlをアップロードするだけで自動反映される。</div>
@@ -207,19 +207,46 @@ tr:hover td { background: #f5f3ff; }
         <tr><td class="nowrap">Instagram</td><td>@tfg_kousekino_sumika</td></tr>
         <tr><td class="nowrap">Facebook</td><td>https://www.facebook.com/profile.php?id=100013163796296</td></tr>
         <tr><td class="nowrap">Amebaブログ</td><td>https://ameblo.jp/tfg1029/</td></tr>
-        <tr><td class="nowrap">SnapWidget ID</td><td>1120344（※本番アカウントに切替要）</td></tr>
+        <tr><td class="nowrap">SnapWidget ID</td><td>1120344（現在はテスト用アカウントのID。本番アカウント @tfg_kousekino_sumika のIDに切り替え要。本番IDはSnapWidget管理画面（app.snapwidget.com）→ 該当ウィジェット→「Get Code」で確認できる）</td></tr>
       </tbody>
     </table>
     <div class="note">⚠️ パスワード類はこの資料には記載しない。各自でメモ帳等に保管すること。</div>
 
-    <div class="section-sub">GitHubアップロード手順</div>
+    <div class="section-sub">GitHubアップロード手順（GitHub Desktop経由）</div>
     <div class="info">
-      ① https://github.com/tfg1029/tfg1029 を開く<br>
-      ② ローカルの最新 index###.html を <strong>index.html</strong> にリネーム<br>
-      ③ index.html を選択 → 右上「...」→「Upload file」でアップロード<br>
-      ④「Commit changes」の説明欄に <code>v1.21 更新</code> などバージョン番号を記入して保存<br>
-      ⑤ Cloudflare Pagesに自動デプロイされる
+      ① ローカルの最新 index####.html を <strong>index.html</strong> にリネーム<br>
+      ② <code>D:\users\Document\GitHub\tfg1029</code> フォルダに配置（上書き）<br>
+      ③ GitHub Desktopを開く → Changes欄に変更ファイルが表示されていることを確認<br>
+      ④ 左下「Summary」欄にコミットメッセージを入力（例：<code>index0125公開</code>）<br>
+      ⑤「Commit to main」→「Push origin」で完了<br>
+      ⑥ Cloudflare Pagesに自動デプロイされる（1〜2分で反映）
     </div>
+
+    <div class="section-sub">Cloudflareキャッシュ強制反映</div>
+    <div class="warn">
+      ⚠️ GitHub Desktopでpush後もサイトに反映されない場合：<br>
+      ① <a href="https://dash.cloudflare.com/login" target="_blank">dash.cloudflare.com</a> にログイン<br>
+      ② 「Pages」→「tfg1029」→「Deployments」タブを開く<br>
+      ③ 最新デプロイの右端「…」→「Retry deployment」をクリック<br>
+      ④ 数分後にサイトを確認する
+    </div>
+
+    <div class="section-sub">noindexタグについて</div>
+    <div class="warn">
+      ⚠️ 現在 index0124.html（公開中のindex.html）には <code>&lt;meta name="robots" content="noindex"&gt;</code> が記載されている。<br>
+      これは鉱石のすみかさんへの確認前にGoogleに索引されないようにするための暫定措置。<br>
+      <strong>確認OKが出たら必ず削除してから index0125 として公開すること。</strong>
+    </div>
+
+    <div class="section-sub">開発ツール</div>
+    <table>
+      <thead><tr><th style="width:200px;">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">Claude Code</td><td>ローカルのHTMLファイル・設定ファイルの編集に使用するAIコーディングツール。ターミナル（コマンドライン）から起動する</td></tr>
+        <tr><td class="nowrap">CLAUDE.md</td><td>Claude Codeの設定ファイル。リポジトリ直下（<code>D:\users\Document\GitHub\tfg1029\CLAUDE.md</code>）に配置。プロジェクトの概要・ファイル命名規則・作業ルールを記載しており、Claude Codeが起動時に自動で読み込む</td></tr>
+        <tr><td class="nowrap">GitHub Desktop</td><td>ローカルの変更をGitHubにアップロード（push）するGUIツール。コマンド操作不要でボタン操作のみ</td></tr>
+      </tbody>
+    </table>
 
     <div class="section-sub">GitHubバージョン管理（タグで過去版を保存）</div>
     <div class="info">
@@ -292,6 +319,17 @@ tr:hover td { background: #f5f3ff; }
       </tbody>
     </table>
     <div class="warn">⚠️ doGet（Webサイトへのデータ配信）を変更したときだけデプロイが必要。それ以外の関数はコード保存（Ctrl+S）のみでOK。</div>
+
+    <div class="section-sub">GASトリガー設定</div>
+    <table>
+      <thead><tr><th style="width:160px;">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap">関数名</td><td>hideOldRows</td></tr>
+        <tr><td class="nowrap">トリガータイプ</td><td>時間ベーストリガー（時間帯タイマー）</td></tr>
+        <tr><td class="nowrap">実行タイミング</td><td>毎日 深夜1〜2時</td></tr>
+        <tr><td class="nowrap">設定場所</td><td>GASエディタ左メニュー「トリガー（時計アイコン）」→「トリガーを追加」</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- 4. 制作ルール -->
@@ -309,7 +347,7 @@ tr:hover td { background: #f5f3ff; }
           <li>正式ライン：0125, 0126…（四桁）で連番管理。現行公開サイトの継続改修に使用</li>
           <li>ベータライン：b0001, b0002…（四桁）で管理。新デザイン・新構成の実験に使用。完成・承認されたら正式ラインに移行（目安2〜3ヶ月）</li>
           <li>変更のたびに新しい番号で保存</li>
-          <li>管理資料ファイル名：鉱石のすみかWeb管理資料_v####.html（例：v0042→v0043）※四桁</li>
+          <li>管理資料ファイル名：鉱石のすみかWeb管理資料_v####.html（例：v0043→v0044）※四桁</li>
         </ul>
       </li>
       <li>進め方
