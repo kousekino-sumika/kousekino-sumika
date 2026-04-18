@@ -4,9 +4,9 @@
 - 店名：鉱石のすみか（パワーストーン・鉱石・アクセサリー専門店）
 - 所在地：静岡県富士宮市
 - 目的：実店舗への集客（オンライン販売なし）
-- 公開URL：https://kousekino-sumika.pages.dev
+- 公開URL：https://tfg1029.pages.dev
 - ホスティング：Cloudflare Pages（GitHubと自動デプロイ連携済み）
-- GitHubリポジトリ：https://github.com/kousekino-sumika/kousekino-sumika
+- GitHubリポジトリ：https://github.com/tfg1029/tfg1029
 - GAS URL：https://script.google.com/macros/s/AKfycbziitAbrKunsAbSAjDmxc0m42P2hncwTAvlfG0i0NJY8dLh2oj3qo6wLYs60HnAECro/exec
 - Gmail：tfg.kousekino.sumika@gmail.com
 - Instagram：@tfg_kousekino_sumika
@@ -19,7 +19,7 @@
 ## ファイル命名規則
 - HTMLファイル（正式ライン）：index0125.html〜（4桁連番）
 - HTMLファイル（ベータライン）：b0001.html〜（新デザイン実験用）
-- Web台帳：鉱石のすみか_Web台帳_v0043.html（v+4桁）
+- Web台帳：鉱石のすみか_Web台帳_v0044.html（v+4桁）
 - Webリサーチ：鉱石のすみか_Webリサーチ_v0002.html（v+4桁）
 - 画像ファイル：基本は.jpg形式、img/フォルダに配置
 - ファビコン：favicon.ico / favicon_32.png / favicon_180.png（img/フォルダに配置）

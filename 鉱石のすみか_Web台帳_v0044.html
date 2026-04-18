@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鉱石のすみか　Webサイト管理資料 v0043</title>
+<title>鉱石のすみか　Webサイト管理資料 v0044</title>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -113,7 +113,7 @@ tr:hover td { background: #f5f3ff; }
 
   <div class="doc-header">
     <div class="doc-title">鉱石のすみか　Webサイト管理資料</div>
-    <div class="doc-subtitle">改修履歴・制作ルール・GASコード・次回タスク　／　2026年4月17日 更新（v0043）</div>
+    <div class="doc-subtitle">改修履歴・制作ルール・GASコード・次回タスク　／　2026年4月18日 更新（v0044）</div>
   </div>
 
   <!-- 固定ナビゲーション -->
@@ -153,7 +153,7 @@ tr:hover td { background: #f5f3ff; }
       <tbody>
         <tr><td class="nowrap">コード品質</td><td>【精査②】バナータップ時のデフォルト表示中ジャンプ不動作：GAS取得前タップ時はidx=-1で何もしない挙動。意図通りか要確認・コメント追記検討</td><td><span class="status-open">⬜ 未着手</span></td></tr>
         <tr><td class="nowrap">コード品質</td><td>【精査⑧】newsItemHTMLのonclick属性をEvent Delegation方式に変更（インラインonclick廃止）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
-        <tr><td class="nowrap">計測</td><td>GAリアルタイム計測の動作確認（kousekino-sumika.pages.devにアクセスしながらリアルタイムレポートで確認）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
+        <tr><td class="nowrap">計測</td><td>GAリアルタイム計測の動作確認（tfg1029.pages.devにアクセスしながらリアルタイムレポートで確認）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
         <tr><td class="nowrap">計測</td><td>Chrome拡張「Google Analytics オプトアウト」をPCにインストール（自分のアクセスを除外）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
         <tr><td class="nowrap">ファイル</td><td>faviconをjpg→png or icoに変換して差し替え（ブラウザ互換性改善）</td><td><span class="status-done">✅ 完了</span></td></tr>
         <tr><td class="nowrap">ドキュメント</td><td>仕様書の作成（2パターン）：①概要版（運用担当者向け）②詳細版（引き継ぎ者向け・技術詳細）</td><td><span class="status-open">⬜ 未着手</span></td></tr>
@@ -178,11 +178,11 @@ tr:hover td { background: #f5f3ff; }
     <table>
       <thead><tr><th style="width:200px;">項目</th><th>内容</th></tr></thead>
       <tbody>
-        <tr><td class="nowrap"><strong>公開URL（現在）</strong></td><td><strong>https://kousekino-sumika.pages.dev</strong></td></tr>
-        <tr><td class="nowrap">Cloudflare Pagesプロジェクト名</td><td>kousekino-sumika</td></tr>
+        <tr><td class="nowrap"><strong>公開URL（現在）</strong></td><td><strong>https://tfg1029.pages.dev</strong></td></tr>
+        <tr><td class="nowrap">Cloudflare Pagesプロジェクト名</td><td>tfg1029</td></tr>
         <tr><td class="nowrap">Cloudflare ログインURL</td><td>https://dash.cloudflare.com/login</td></tr>
         <tr><td class="nowrap">Cloudflare アカウント</td><td>tfg.kousekino.sumika&#64;gmail.com　／　パスワードは別途保管</td></tr>
-        <tr><td class="nowrap">GitHub リポジトリ</td><td>https://github.com/kousekino-sumika/kousekino-sumika</td></tr>
+        <tr><td class="nowrap">GitHub リポジトリ</td><td>https://github.com/tfg1029/tfg1029</td></tr>
         <tr><td class="nowrap">GitHub アカウント</td><td>tfg.kousekino.sumika&#64;gmail.com　／　パスワードは別途保管</td></tr>
         <tr><td class="nowrap">GAS URL</td><td style="word-break:break-all;">https://script.google.com/macros/s/AKfycbziitAbrKunsAbSAjDmxc0m42P2hncwTAvlfG0i0NJY8dLh2oj3qo6wLYs60HnAECro/exec</td></tr>
         <tr><td class="nowrap">画像フォルダ</td><td>img/（拡張子は .jpg 統一）</td></tr>
@@ -214,7 +214,7 @@ tr:hover td { background: #f5f3ff; }
 
     <div class="section-sub">GitHubアップロード手順</div>
     <div class="info">
-      ① https://github.com/kousekino-sumika/kousekino-sumika を開く<br>
+      ① https://github.com/tfg1029/tfg1029 を開く<br>
       ② ローカルの最新 index###.html を <strong>index.html</strong> にリネーム<br>
       ③ index.html を選択 → 右上「...」→「Upload file」でアップロード<br>
       ④「Commit changes」の説明欄に <code>v1.21 更新</code> などバージョン番号を記入して保存<br>
@@ -236,14 +236,15 @@ tr:hover td { background: #f5f3ff; }
     <div class="warn">
       ⚠️「Your main branch isn't protected」→ 1人運用のため意図的に未設定。Dismissしてok。落ち着いたタイミングで「Protect this branch」を設定予定。<br>
       ⚠️ Cloudflare botのPull Request（「Add Cloudflare Workers...」）→「Close pull request」で閉じるだけでOK。マージしないこと。<br>
-      ⚠️「kousekino-sumika/kousekino-sumika」の特別リポジトリ案内 → GitHubの仕様。無視してOK。
+      ⚠️「tfg1029/tfg1029」の特別リポジトリ案内 → GitHubの仕様。無視してOK。
     </div>
 
     <div class="section-sub">公開環境の変更履歴</div>
     <table>
       <thead><tr><th style="width:100px;">日付</th><th>変更内容</th><th style="width:120px;">状態</th></tr></thead>
       <tbody>
-        <tr><td class="nowrap">2026.04.12</td><td>Cloudflare Pages に移行・URL短縮（https://kousekino-sumika.pages.dev）／GitHubユーザー名・リポジトリ名を kouseki-no-sumika → kousekino-sumika に変更</td><td>✅ 現在の環境</td></tr>
+        <tr><td class="nowrap">2026.04.18</td><td>GitHubユーザー名・リポジトリ名・Cloudflare PagesプロジェクトURLをtfg1029に変更（公開URL：https://tfg1029.pages.dev）</td><td>✅ 現在の環境</td></tr>
+        <tr><td class="nowrap">2026.04.12</td><td>Cloudflare Pages に移行・URL短縮（https://kousekino-sumika.pages.dev）／GitHubユーザー名・リポジトリ名を kouseki-no-sumika → kousekino-sumika に変更</td><td>移行済み</td></tr>
         <tr><td class="nowrap">2026.04.12以前</td><td>Cloudflare Workers で公開（URL：kouseki-no-sumika.tfg-kousekino-sumika.workers.dev）</td><td>廃止</td></tr>
       </tbody>
     </table>
